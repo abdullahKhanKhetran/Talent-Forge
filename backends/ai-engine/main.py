@@ -25,7 +25,7 @@ class PerformanceRequest(BaseModel):
 def health_check():
     return {"status": "online", "service": "AI Engine"}
 
-@app.post("/predict/anomaly")
+@app.post("/anomalies")
 def predict_anomaly(request: AnomalyRequest):
     """
     Detects anomalies in attendance patterns using Isolation Forest (Mocked).
@@ -52,7 +52,7 @@ def predict_anomaly(request: AnomalyRequest):
         "model_version": "v1.0-mock"
     }
 
-@app.post("/predict/performance")
+@app.post("/performance")
 def predict_performance(request: PerformanceRequest):
     """
     Predicts employee performance score (0-100).

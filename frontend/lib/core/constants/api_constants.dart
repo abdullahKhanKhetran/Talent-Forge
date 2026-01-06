@@ -1,10 +1,17 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart';
+
 /// API Constants for TalentForge Application
 /// Points exclusively to the .NET Gateway (IngestorService).
 class ApiConstants {
   ApiConstants._();
 
-  // --- Base URL (Update for Production) ---
-  static const String baseUrl = 'http://localhost:5000'; // .NET Gateway
+  // --- Base URL (Corrected for Local Development) ---
+  static String get baseUrl {
+    if (kIsWeb) return 'http://localhost:5046';
+    if (Platform.isAndroid) return 'http://10.0.2.2:5046'; // Android Emulator
+    return 'http://localhost:5046'; // iOS/Desktop
+  }
 
   // --- API Versioning ---
   static const String apiVersion = '/api/v1';
