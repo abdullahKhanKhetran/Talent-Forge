@@ -17,6 +17,12 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('role')->default('employee'); // admin, employee, manager
+            $table->foreignId('department_id')->nullable()->constrained()->nullOnDelete();
+            $table->string('designation')->nullable();
+            $table->string('employee_code')->unique()->nullable();
+            $table->string('status')->default('active'); // active, resigned, suspended
+            $table->string('phone')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

@@ -45,10 +45,61 @@ services:
       - talentforge-network
 
   # -----------------------------
-  # Services (Placeholders for now)
+  # Services
   # -----------------------------
-  # We will map these to local directories during development
-  # but defining them here helps visualization.
+  business:
+    build:
+      context: ./backends/business
+      dockerfile: Dockerfile
+    container_name: talentforge_business
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      DB_HOST: postgres
+      REDIS_HOST: redis
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - talentforge-network
+    volumes:
+      - ./backends/business:/var/www/html
+
+  ai-engine:
+    build:
+      context: ./backends/ai-engine
+      dockerfile: Dockerfile
+    container_name: talentforge_ai_engine
+    restart: unless-stopped
+    ports:
+      - "8001:8000" # Expose on 8001 locally, internal is 8000
+    depends_on:
+      - mongo
+    networks:
+      - talentforge-network
+    volumes:
+      - ./backends/ai-engine:/app
+
+  gateway:
+    build:
+      context: ./backends/IngestorService
+      dockerfile: Dockerfile
+    container_name: talentforge_gateway
+    restart: unless-stopped
+    ports:
+      - "5000:8080" # ASP.NET Core default is 8080 in container
+    environment:
+      - Services__LaravelUrl=http://business:8000/api/
+      - Services__AIUrl=http://ai-engine:8000/
+      - Redis__Connection=redis:6379
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=attendance_logs;Username=forge;Password=forge_secret
+    depends_on:
+      - business
+      - ai-engine
+      - redis
+    networks:
+      - talentforge-network
 
 networks:
   talentforge-network:

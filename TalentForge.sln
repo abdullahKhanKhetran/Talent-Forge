@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backends", "backends", "{81267934-4FE5-6C83-B806-5B06E723B05C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IngestorService", "backends\IngestorService\IngestorService.csproj", "{985066B7-07B4-903A-EADF-6DC38DEC4DD1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{985066B7-07B4-903A-EADF-6DC38DEC4DD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{985066B7-07B4-903A-EADF-6DC38DEC4DD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{985066B7-07B4-903A-EADF-6DC38DEC4DD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{985066B7-07B4-903A-EADF-6DC38DEC4DD1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{985066B7-07B4-903A-EADF-6DC38DEC4DD1} = {81267934-4FE5-6C83-B806-5B06E723B05C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7F8041A2-D52E-4B34-AD25-3A5860840F9C}
+	EndGlobalSection
+EndGlobal
