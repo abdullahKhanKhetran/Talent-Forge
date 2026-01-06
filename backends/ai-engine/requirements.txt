@@ -1,0 +1,28 @@
+# Core API
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+pydantic>=2.7.0
+pydantic-settings>=2.2.0
+
+# Database
+motor>=3.4.0  # Async MongoDB driver
+pymongo>=4.6.0
+
+# AI / ML - Anomaly Detection & Prediction
+numpy>=1.26.0
+pandas>=2.2.0
+scikit-learn>=1.4.0
+xgboost>=2.0.0
+
+# AI / ML - Chatbot & LLM
+langchain>=0.1.16
+langchain-community>=0.0.33
+langchain-openai>=0.1.3 # Standard choice, can swap for local models
+sentence-transformers>=2.6.1 # For local embeddings
+faiss-cpu>=1.8.0 # Vector DB for RAG
+chromadb>=0.4.24 # Alternative Vector DB (we'll stick to FAISS or Chroma)
+
+# Utilities
+python-multipart>=0.0.9 # File uploads
+httpx>=0.27.0 # Async HTTP client
+python-dotenv>=1.0.1

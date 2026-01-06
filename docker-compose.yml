@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # -----------------------------
+  # Databases
+  # -----------------------------
+  postgres:
+    image: postgres:15-alpine
+    container_name: talentforge_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USERNAME:-forge}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-forge_secret}
+      POSTGRES_DB: ${DB_DATABASE:-talentforge}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - talentforge-network
+
+  redis:
+    image: redis:alpine
+    container_name: talentforge_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - talentforge-network
+
+  mongo:
+    image: mongo:latest
+    container_name: talentforge_mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD:-admin_secret}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - talentforge-network
+
+  # -----------------------------
+  # Services (Placeholders for now)
+  # -----------------------------
+  # We will map these to local directories during development
+  # but defining them here helps visualization.
+
+networks:
+  talentforge-network:
+    driver: bridge
+
+volumes:
+  pg_data:
+  redis_data:
+  mongo_data:
