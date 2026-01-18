@@ -40,14 +40,40 @@ class AttendanceController extends Controller
             'date' => Carbon::today(),
             'check_in_time' => Carbon::now(),
             'status' => 'present',
-            'location_data' => json_encode([
+            'location_data' => [
                 'check_in' => [
                     'lat' => $request->latitude,
                     'long' => $request->longitude,
                     'notes' => $request->notes
                 ]
-            ]),
+            ],
         ]);
+
+        // Trigger AI Anomaly Detection (Async/Mock)
+        try {
+            $aiUrl = config('services.ai_engine.url') . '/anomalies';
+            $response = \Illuminate\Support\Facades\Http::timeout(2)->post($aiUrl, [
+                'records' => [[
+                    'user_id' => $user->id,
+                    'check_in_time' => Carbon::now()->toDateTimeString(),
+                    'location' => [
+                        'lat' => $request->latitude,
+                        'long' => $request->longitude
+                    ]
+                ]]
+            ]);
+
+            if ($response->successful()) {
+                $anomalies = $response->json('anomalies');
+                if (!empty($anomalies)) {
+                    $attendance->risk_score = $anomalies[0]['confidence'];
+                    $attendance->save();
+                }
+            }
+        } catch (\Exception $e) {
+            // Silently fail if AI engine is down
+            \Illuminate\Support\Facades\Log::warning("AI Anomaly call failed: " . $e->getMessage());
+        }
 
         return response()->json([
             'status' => 'success',
@@ -89,12 +115,12 @@ class AttendanceController extends Controller
         $attendance->check_out_time = Carbon::now();
         
         // Update location data
-        $locationData = json_decode($attendance->location_data, true) ?? [];
+        $locationData = $attendance->location_data ?? [];
         $locationData['check_out'] = [
             'lat' => $request->latitude,
             'long' => $request->longitude
         ];
-        $attendance->location_data = json_encode($locationData);
+        $attendance->location_data = $locationData;
         
         // Calculate duration (hours)
         $duration = Carbon::parse($attendance->check_in_time)->diffInHours(Carbon::now());

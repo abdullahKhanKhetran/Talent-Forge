@@ -25,13 +25,17 @@ class LeaveController extends Controller
 
         $user = Auth::user();
 
-        // Optional: Check balance here
+        // Calculate days requested
+        $start = \Carbon\Carbon::parse($request->start_date);
+        $end = \Carbon\Carbon::parse($request->end_date);
+        $daysRequested = $start->diffInDays($end) + 1;
 
         $leave = LeaveRequest::create([
             'user_id' => $user->id,
             'leave_type_id' => $request->leave_type_id,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date,
+            'days_requested' => $daysRequested,
             'reason' => $request->reason,
             'status' => 'pending',
         ]);

@@ -12,12 +12,10 @@ class AttendanceLog extends Model
     protected $fillable = [
         'user_id',
         'date',
-        'check_in',
-        'check_out',
-        'latitude_in',
-        'longitude_in',
-        'latitude_out',
-        'longitude_out',
+        'check_in_time',
+        'check_out_time',
+        'working_hours',
+        'location_data',
         'status',
         'notes',
         'risk_score',
@@ -27,12 +25,10 @@ class AttendanceLog extends Model
     {
         return [
             'date' => 'date',
-            'check_in' => 'datetime:H:i:s',
-            'check_out' => 'datetime:H:i:s',
-            'latitude_in' => 'decimal:8',
-            'longitude_in' => 'decimal:8',
-            'latitude_out' => 'decimal:8',
-            'longitude_out' => 'decimal:8',
+            'check_in_time' => 'datetime',
+            'check_out_time' => 'datetime',
+            'location_data' => 'array',
+            'working_hours' => 'float',
             'risk_score' => 'decimal:2',
         ];
     }

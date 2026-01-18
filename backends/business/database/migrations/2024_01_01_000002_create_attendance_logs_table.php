@@ -15,12 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->date('date');
-            $table->time('check_in')->nullable();
-            $table->time('check_out')->nullable();
-            $table->decimal('latitude_in', 10, 8)->nullable();
-            $table->decimal('longitude_in', 11, 8)->nullable();
-            $table->decimal('latitude_out', 10, 8)->nullable();
-            $table->decimal('longitude_out', 11, 8)->nullable();
+            $table->dateTime('check_in_time')->nullable();
+            $table->dateTime('check_out_time')->nullable();
+            $table->float('working_hours')->nullable();
+            $table->json('location_data')->nullable(); // Stores lat/long/notes for in/out
             $table->string('status')->default('present'); // present, absent, late, half_day
             $table->text('notes')->nullable();
             $table->decimal('risk_score', 5, 2)->nullable(); // AI anomaly score

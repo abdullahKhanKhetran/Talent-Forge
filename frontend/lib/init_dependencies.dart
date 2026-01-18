@@ -76,7 +76,7 @@ Future<void> initDependencies() async {
   );
 
   // BLoCs
-  sl.registerFactory(() => AuthBloc(authRepository: sl()));
+  sl.registerLazySingleton(() => AuthBloc(authRepository: sl()));
 
   // ============================================================
   // FEATURES - EMPLOYEE MANAGEMENT

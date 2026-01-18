@@ -18,17 +18,20 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // 3. Configure Redis
-// builder.Services.AddSingleton<IConnectionMultiplexer>(sp => ConnectionMultiplexer.Connect(redisConn));
+try {
+    builder.Services.AddSingleton<IConnectionMultiplexer>(sp => ConnectionMultiplexer.Connect(redisConn));
+} catch (Exception ex) {
+    Console.WriteLine($"Redis connection failed: {ex.Message}");
+}
 
-// 4. Configure Authentication (JWT) - OPTIONAL for Proxy if we just pass-through header
-// But we might want to validate here to save backend load.
+// 4. Configure Authentication (JWT)
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = false,
-            ValidateAudience = false, // Internal audience
+            ValidateAudience = false, 
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
@@ -39,21 +42,20 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // 5. Configure HttpClients
 builder.Services.AddHttpClient("LaravelCore", client =>
 {
-    // Docker: http://business:8000/api/
-    // Local: http://localhost:8000/api/
     client.BaseAddress = new Uri(builder.Configuration["Services:LaravelUrl"] ?? "http://business:8000/api/");
 });
 
 builder.Services.AddHttpClient("AIEngine", client =>
 {
-    // Docker: http://ai-engine:8000/
     client.BaseAddress = new Uri(builder.Configuration["Services:AIUrl"] ?? "http://ai-engine:8000/");
 });
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
-        b => b.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+    options.AddPolicy("AllowFlutter",
+        b => b.WithOrigins("http://localhost:3000", "http://localhost:8000") // Add production domains here
+              .AllowAnyMethod()
+              .AllowAnyHeader());
 });
 
 var app = builder.Build();
@@ -64,8 +66,19 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors("AllowAll");
-// app.UseAuthentication(); // Let Laravel handle auth for now to allow login/register pass-through
+app.UseCors("AllowFlutter");
+// app.UseAuthentication(); 
+
+// DB Health Check Endpoint (To use dbConn)
+app.MapGet("/health", async () => {
+    try {
+        using var conn = new NpgsqlConnection(dbConn);
+        await conn.OpenAsync();
+        return Results.Ok(new { Database = "Connected", Gateway = "Online" });
+    } catch (Exception ex) {
+        return Results.Problem($"Database connection failed: {ex.Message}");
+    }
+});
 
 // -----------------------------------------------------------------------------
 // PROXY LOGIC

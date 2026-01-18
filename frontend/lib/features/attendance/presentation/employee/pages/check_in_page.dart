@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
@@ -38,6 +39,36 @@ class _CheckInPageState extends State<CheckInPage> {
 
   Future<void> _getCurrentLocation() async {
     setState(() => _isLoadingLocation = true);
+
+    var status = await Permission.location.status;
+    if (status.isPermanentlyDenied) {
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Permission Required'),
+            content: const Text(
+              'Location permission is permanently denied. Please enable it in settings to use attendance features.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => context.pop(),
+                child: const Text('CANCEL'),
+              ),
+              TextButton(
+                onPressed: () {
+                  PermissionHelper.openSettings();
+                  context.pop();
+                },
+                child: const Text('OPEN SETTINGS'),
+              ),
+            ],
+          ),
+        );
+        setState(() => _isLoadingLocation = false);
+      }
+      return;
+    }
 
     final hasPermission = await PermissionHelper.requestLocationPermission();
     if (!hasPermission) {

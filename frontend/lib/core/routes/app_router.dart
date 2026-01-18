@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../init_dependencies.dart';
-import '../../features/auth/presentation/bloc/auth_bloc.dart';
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/attendance/presentation/employee/pages/check_in_page.dart';
 import '../../features/attendance/presentation/admin/pages/attendance_dashboard_page.dart';
@@ -30,10 +29,7 @@ class AppRouter {
       GoRoute(
         path: '/login',
         name: 'login',
-        builder: (context, state) => BlocProvider(
-          create: (_) => sl<AuthBloc>(),
-          child: const LoginPage(),
-        ),
+        builder: (context, state) => const LoginPage(),
       ),
 
       // --- Employee Routes ---

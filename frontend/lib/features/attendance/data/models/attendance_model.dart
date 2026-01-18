@@ -11,17 +11,25 @@ class AttendanceModel extends AttendanceRecord {
     super.longitudeIn,
     required super.status,
     super.riskScore,
+    super.userName,
   });
 
   factory AttendanceModel.fromJson(Map<String, dynamic> json) {
+    String? name;
+    if (json['user'] != null && json['user'] is Map) {
+      name = json['user']['name'];
+    }
+
     return AttendanceModel(
       id: json['id'],
       userId: json['user_id'] is int
           ? json['user_id']
           : int.parse(json['user_id'].toString()),
       date: json['date'],
-      checkIn: json['check_in'],
-      checkOut: json['check_out'],
+      checkIn:
+          json['check_in_time'] ??
+          json['check_in'], // Support both column names
+      checkOut: json['check_out_time'] ?? json['check_out'],
       latitudeIn: json['latitude_in'] != null
           ? double.tryParse(json['latitude_in'].toString())
           : null,
@@ -32,6 +40,7 @@ class AttendanceModel extends AttendanceRecord {
       riskScore: json['risk_score'] != null
           ? double.tryParse(json['risk_score'].toString())
           : null,
+      userName: name,
     );
   }
 

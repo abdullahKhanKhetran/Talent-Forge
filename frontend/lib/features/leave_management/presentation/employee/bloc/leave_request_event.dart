@@ -7,7 +7,13 @@ abstract class LeaveRequestEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadLeaveDashboard extends LeaveRequestEvent {}
+class LoadLeaveDashboard extends LeaveRequestEvent {
+  final bool isSilent;
+  const LoadLeaveDashboard({this.isSilent = false});
+
+  @override
+  List<Object> get props => [isSilent];
+}
 
 class SubmitLeaveRequest extends LeaveRequestEvent {
   final int leaveTypeId;

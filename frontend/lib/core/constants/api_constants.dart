@@ -6,15 +6,21 @@ import 'package:flutter/foundation.dart';
 class ApiConstants {
   ApiConstants._();
 
+  // --- Config ---
+  static const bool useGateway = false; // Set to true to use .NET Gateway
+
   // --- Base URL (Corrected for Local Development) ---
   static String get baseUrl {
-    if (kIsWeb) return 'http://localhost:5046';
-    if (Platform.isAndroid) return 'http://10.0.2.2:5046'; // Android Emulator
-    return 'http://localhost:5046'; // iOS/Desktop
+    final port = useGateway ? '5046' : '8000';
+    if (kIsWeb) return 'http://localhost:$port';
+    if (Platform.isAndroid) return 'http://10.0.2.2:$port'; // Android Emulator
+    return 'http://localhost:$port'; // iOS/Desktop
   }
 
   // --- API Versioning ---
-  static const String apiVersion = '/api/v1';
+  // If useGateway is true, we need '/api/v1' (gateway prefix)
+  // If useGateway is false, we use '/api' (laravel default prefix)
+  static String get apiVersion => useGateway ? '/api/v1' : '/api';
 
   // --- Endpoints ---
   // Auth

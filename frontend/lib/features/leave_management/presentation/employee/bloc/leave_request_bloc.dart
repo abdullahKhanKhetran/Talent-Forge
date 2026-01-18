@@ -21,7 +21,9 @@ class LeaveRequestBloc extends Bloc<LeaveRequestEvent, LeaveRequestState> {
     LoadLeaveDashboard event,
     Emitter<LeaveRequestState> emit,
   ) async {
-    emit(LeaveRequestLoading());
+    if (!event.isSilent) {
+      emit(LeaveRequestLoading());
+    }
 
     final typesResult = await repository.getLeaveTypes();
     final balancesResult = await repository.getLeaveBalances();
@@ -69,8 +71,12 @@ class LeaveRequestBloc extends Bloc<LeaveRequestEvent, LeaveRequestState> {
     result.fold(
       (failure) => emit(LeaveRequestFailure(message: failure.message)),
       (_) {
-        // Reload dashboard to update balances and history
-        add(LoadLeaveDashboard());
+        emit(
+          const LeaveRequestSuccess(
+            message: 'Leave request submitted successfully!',
+          ),
+        );
+        add(const LoadLeaveDashboard(isSilent: true));
       },
     );
   }

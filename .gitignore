@@ -1,9 +1,31 @@
-# Visual Studio
-.vs/
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# env
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Dependencies
+node_modules/
+/vendor/
+venv/
+.venv/
+env/
+
 # Flutter generated platform files
-frontend/linux/flutter/generated_*
-frontend/macos/Flutter/Generated*
-frontend/windows/flutter/generated_*
+**/flutter/generated_*
+**/Flutter/Generated*
+**/build/
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
 
 # .NET build artifacts
 **/obj/
@@ -11,9 +33,32 @@ frontend/windows/flutter/generated_*
 **/Debug/
 **/Release/
 
-# Other common junk
+# Python
 **/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Laravel
+storage/*.key
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+auth.json
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Other common junk
 **/*.g.dart
 **/*.freezed.dart
-pubspec.lock   # optional, but helps reduce noise
-*.log
+# pubspec.lock   # optional, but helps reduce noise
+ .DS_Store

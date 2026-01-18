@@ -124,14 +124,20 @@ class _AttendanceDashboardPageState extends State<AttendanceDashboardPage> {
                         margin: const EdgeInsets.only(bottom: 8),
                         child: ListTile(
                           leading: CircleAvatar(
-                            backgroundColor: Colors.grey.shade200,
+                            backgroundColor: Colors.blue.shade100,
                             child: Text(
-                              '${record.userId}',
-                            ), // Placeholder for initial
+                              record.userName != null
+                                  ? record.userName![0].toUpperCase()
+                                  : '#',
+                              style: const TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
                           title: Text(
-                            'User #${record.userId}',
-                          ), // Placeholder for name
+                            record.userName ?? 'User #${record.userId}',
+                          ),
                           subtitle: Text(
                             'In: ${record.checkIn ?? '-'} | Out: ${record.checkOut ?? '-'}',
                           ),

@@ -10,6 +10,7 @@ class AttendanceRecord extends Equatable {
   final double? longitudeIn;
   final String status;
   final double? riskScore;
+  final String? userName;
 
   const AttendanceRecord({
     required this.id,
@@ -21,6 +22,7 @@ class AttendanceRecord extends Equatable {
     this.longitudeIn,
     required this.status,
     this.riskScore,
+    this.userName,
   });
 
   @override
