@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('device_id')->unique();
             $table->string('fcm_token')->nullable();
             $table->string('platform')->nullable(); // android, ios, web
-            $table->string('model')->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->timestamp('last_active')->nullable();
+            $table->json('meta_data')->nullable(); // Stores device_info (model, os, etc.)
             $table->timestamps();
         });
     }

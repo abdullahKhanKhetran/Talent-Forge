@@ -24,7 +24,9 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     LoadEmployees event,
     Emitter<EmployeeState> emit,
   ) async {
-    emit(EmployeeLoading());
+    if (!event.isSilent) {
+      emit(EmployeeLoading());
+    }
     final result = await _employeeRepository.getEmployees();
     result.fold(
       (failure) => emit(EmployeeError(failure.message)),
@@ -36,9 +38,9 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     LoadDepartments event,
     Emitter<EmployeeState> emit,
   ) async {
-    // We don't want to show full loading screen for dropdown
-    // But if we reuse EmployeeLoading it might trigger full screen loader
-    // For simplicity, let's just emit loaded state or we can use a separate loading state
+    if (!event.isSilent) {
+      emit(EmployeeLoading());
+    }
     final result = await _employeeRepository.getDepartments();
     result.fold(
       (failure) => emit(EmployeeError(failure.message)),

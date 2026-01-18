@@ -8,6 +8,8 @@ class AttendanceRecord extends Equatable {
   final String? checkOut;
   final double? latitudeIn;
   final double? longitudeIn;
+  final double? latitudeOut;
+  final double? longitudeOut;
   final String status;
   final double? riskScore;
   final String? userName;
@@ -20,6 +22,8 @@ class AttendanceRecord extends Equatable {
     this.checkOut,
     this.latitudeIn,
     this.longitudeIn,
+    this.latitudeOut,
+    this.longitudeOut,
     required this.status,
     this.riskScore,
     this.userName,
@@ -34,6 +38,8 @@ class AttendanceRecord extends Equatable {
     checkOut,
     latitudeIn,
     longitudeIn,
+    latitudeOut,
+    longitudeOut,
     status,
     riskScore,
   ];

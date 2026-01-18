@@ -9,6 +9,8 @@ class AttendanceModel extends AttendanceRecord {
     super.checkOut,
     super.latitudeIn,
     super.longitudeIn,
+    super.latitudeOut,
+    super.longitudeOut,
     required super.status,
     super.riskScore,
     super.userName,
@@ -36,6 +38,12 @@ class AttendanceModel extends AttendanceRecord {
       longitudeIn: json['longitude_in'] != null
           ? double.tryParse(json['longitude_in'].toString())
           : null,
+      latitudeOut: json['latitude_out'] != null
+          ? double.tryParse(json['latitude_out'].toString())
+          : null,
+      longitudeOut: json['longitude_out'] != null
+          ? double.tryParse(json['longitude_out'].toString())
+          : null,
       status: json['status'] ?? 'absent',
       riskScore: json['risk_score'] != null
           ? double.tryParse(json['risk_score'].toString())
@@ -53,6 +61,8 @@ class AttendanceModel extends AttendanceRecord {
       'check_out': checkOut,
       'latitude_in': latitudeIn,
       'longitude_in': longitudeIn,
+      'latitude_out': latitudeOut,
+      'longitude_out': longitudeOut,
       'status': status,
       'risk_score': riskScore,
     };

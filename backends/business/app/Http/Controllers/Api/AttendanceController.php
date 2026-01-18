@@ -35,18 +35,18 @@ class AttendanceController extends Controller
             ], 400);
         }
 
+        $checkInTime = Carbon::now();
+        $startOfDay = Carbon::today()->setTime(9, 0); // 9:00 AM
+        $status = $checkInTime->gt($startOfDay->addMinutes(15)) ? 'late' : 'present';
+
         $attendance = AttendanceLog::create([
             'user_id' => $user->id,
             'date' => Carbon::today(),
-            'check_in_time' => Carbon::now(),
-            'status' => 'present',
-            'location_data' => [
-                'check_in' => [
-                    'lat' => $request->latitude,
-                    'long' => $request->longitude,
-                    'notes' => $request->notes
-                ]
-            ],
+            'check_in_time' => $checkInTime,
+            'status' => $status,
+            'latitude_in' => $request->latitude,
+            'longitude_in' => $request->longitude,
+            'notes' => $request->notes,
         ]);
 
         // Trigger AI Anomaly Detection (Async/Mock)
@@ -113,14 +113,8 @@ class AttendanceController extends Controller
         }
 
         $attendance->check_out_time = Carbon::now();
-        
-        // Update location data
-        $locationData = $attendance->location_data ?? [];
-        $locationData['check_out'] = [
-            'lat' => $request->latitude,
-            'long' => $request->longitude
-        ];
-        $attendance->location_data = $locationData;
+        $attendance->latitude_out = $request->latitude;
+        $attendance->longitude_out = $request->longitude;
         
         // Calculate duration (hours)
         $duration = Carbon::parse($attendance->check_in_time)->diffInHours(Carbon::now());
@@ -141,7 +135,8 @@ class AttendanceController extends Controller
     public function history(Request $request)
     {
         $user = Auth::user();
-        $history = AttendanceLog::where('user_id', $user->id)
+        $history = AttendanceLog::with('user') // Eager load user for names
+            ->where('user_id', $user->id)
             ->orderBy('date', 'desc')
             ->paginate(10);
 

@@ -117,7 +117,17 @@ class LeaveController extends Controller
         $leave->approved_by = Auth::id(); // Assuming admin is logged in
         $leave->save();
         
-        // UseCase: Deduct balance would happen here
+        // Deduct balance
+        $balance = LeaveBalance::where('user_id', $leave->user_id)
+            ->where('leave_type_id', $leave->leave_type_id)
+            ->where('year', \Carbon\Carbon::parse($leave->start_date)->year)
+            ->first();
+
+        if ($balance) {
+            $balance->used_days += $leave->days_requested;
+            $balance->remaining_days -= $leave->days_requested;
+            $balance->save();
+        }
 
         return response()->json([
             'status' => 'success',

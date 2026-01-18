@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'leave_type.dart';
+import '../../../../core/common/entities/user.dart';
 
 class LeaveRequest extends Equatable {
   final int id;
@@ -12,6 +13,7 @@ class LeaveRequest extends Equatable {
   final String status; // pending, approved, rejected
   final String? rejectionReason;
   final String? adminRemarks;
+  final User? user;
 
   const LeaveRequest({
     required this.id,
@@ -24,6 +26,7 @@ class LeaveRequest extends Equatable {
     required this.status,
     this.rejectionReason,
     this.adminRemarks,
+    this.user,
   });
 
   bool get isPending => status == 'pending';
@@ -42,5 +45,6 @@ class LeaveRequest extends Equatable {
     status,
     rejectionReason,
     adminRemarks,
+    user,
   ];
 }

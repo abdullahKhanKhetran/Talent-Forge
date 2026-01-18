@@ -3,7 +3,7 @@
 .vscode/
 *.swp
 *.swo
-
+.vs
 # env
 .env
 .env.local

@@ -1,5 +1,6 @@
 import '../../domain/entities/leave_request.dart';
 import 'leave_type_model.dart';
+import '../../../Auth/data/models/user_model.dart';
 
 class LeaveRequestModel extends LeaveRequest {
   const LeaveRequestModel({
@@ -13,6 +14,7 @@ class LeaveRequestModel extends LeaveRequest {
     required super.status,
     super.rejectionReason,
     super.adminRemarks,
+    super.user,
   });
 
   factory LeaveRequestModel.fromJson(Map<String, dynamic> json) {
@@ -27,6 +29,7 @@ class LeaveRequestModel extends LeaveRequest {
       status: json['status'],
       rejectionReason: json['rejection_reason'],
       adminRemarks: json['admin_remarks'],
+      user: json['user'] != null ? UserModel.fromJson(json['user']) : null,
     );
   }
 }

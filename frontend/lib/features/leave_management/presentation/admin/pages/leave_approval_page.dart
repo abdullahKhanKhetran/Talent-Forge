@@ -103,7 +103,26 @@ class _LeaveApprovalPageState extends State<LeaveApprovalPage> {
           } else if (state is LeaveApprovalLoaded) {
             final leaves = state.pendingLeaves;
             if (leaves.isEmpty) {
-              return const Center(child: Text('No pending leave requests.'));
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.event_available,
+                      size: 64,
+                      color: Colors.grey.shade400,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'No pending leave requests.',
+                      style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
+              );
             }
 
             return ListView.builder(
@@ -135,17 +154,23 @@ class _LeaveApprovalPageState extends State<LeaveApprovalPage> {
                 Row(
                   children: [
                     CircleAvatar(
-                      backgroundColor: Colors.grey.shade200,
+                      backgroundColor: AppColors.primary.withOpacity(0.1),
                       child: Text(
-                        '${request.userId}',
-                      ), // Placeholder for User Initials
+                        request.user?.name.isNotEmpty == true
+                            ? request.user!.name[0].toUpperCase()
+                            : 'U',
+                        style: TextStyle(
+                          color: AppColors.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'User #${request.userId}',
+                          request.user?.name ?? 'User #${request.userId}',
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,

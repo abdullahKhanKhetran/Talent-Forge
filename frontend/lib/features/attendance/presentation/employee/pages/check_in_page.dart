@@ -101,33 +101,55 @@ class _CheckInPageState extends State<CheckInPage> {
     }
   }
 
-  void _onCheckIn() {
+  Future<void> _onCheckIn() async {
     if (_currentPosition == null) {
-      _getCurrentLocation();
-      return;
+      await _getCurrentLocation();
+      if (_currentPosition == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Unable to determine location. Please try again.'),
+            ),
+          );
+        }
+        return;
+      }
     }
 
-    context.read<CheckInBloc>().add(
-      CheckIn(
-        latitude: _currentPosition!.latitude,
-        longitude: _currentPosition!.longitude,
-        notes: _notesController.text,
-      ),
-    );
+    if (mounted) {
+      context.read<CheckInBloc>().add(
+        CheckIn(
+          latitude: _currentPosition!.latitude,
+          longitude: _currentPosition!.longitude,
+          notes: _notesController.text,
+        ),
+      );
+    }
   }
 
-  void _onCheckOut() {
+  Future<void> _onCheckOut() async {
     if (_currentPosition == null) {
-      _getCurrentLocation();
-      return;
+      await _getCurrentLocation();
+      if (_currentPosition == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Unable to determine location. Please try again.'),
+            ),
+          );
+        }
+        return;
+      }
     }
 
-    context.read<CheckInBloc>().add(
-      CheckOut(
-        latitude: _currentPosition!.latitude,
-        longitude: _currentPosition!.longitude,
-      ),
-    );
+    if (mounted) {
+      context.read<CheckInBloc>().add(
+        CheckOut(
+          latitude: _currentPosition!.latitude,
+          longitude: _currentPosition!.longitude,
+        ),
+      );
+    }
   }
 
   @override

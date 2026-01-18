@@ -8,7 +8,7 @@ using System.Net.Http.Headers;
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. Load Configuration
-var jwtSecret = builder.Configuration["Jwt:Secret"] ?? "super_secret_key_change_me_in_prod_12345";
+var jwtSecret = builder.Configuration["Jwt:Secret"] ?? throw new InvalidOperationException("JWT Secret is missing in configuration!");
 var redisConn = builder.Configuration["Redis:Connection"] ?? "localhost:6379";
 var dbConn = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Host=localhost;Database=attendance_logs;Username=forge;Password=forge_secret";
 
@@ -53,7 +53,7 @@ builder.Services.AddHttpClient("AIEngine", client =>
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFlutter",
-        b => b.WithOrigins("http://localhost:3000", "http://localhost:8000") // Add production domains here
+        b => b.WithOrigins("http://localhost:3000", "http://localhost:8000", "http://10.0.2.2:8000") // Added Android Emulator
               .AllowAnyMethod()
               .AllowAnyHeader());
 });
@@ -112,10 +112,14 @@ async Task ForwardRequest(HttpContext context, string clientName, string upstrea
         }
     }
 
+    // Blacklist problematic headers
+    var headersToSkip = new[] { "Host", "Connection", "Keep-Alive", "Transfer-Encoding", "Upgrade" };
+
     // Copy Request Headers
     foreach (var header in context.Request.Headers)
     {
-        if(!header.Key.StartsWith("Content-")) {
+        if (!headersToSkip.Contains(header.Key) && !header.Key.StartsWith("Content-"))
+        {
             requestMessage.Headers.TryAddWithoutValidation(header.Key, header.Value.ToArray());
         }
     }

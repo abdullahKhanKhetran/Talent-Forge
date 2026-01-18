@@ -49,7 +49,9 @@ class _EmployeeListPageState extends State<EmployeeListPage> {
                 backgroundColor: Colors.green,
               ),
             );
-            context.read<EmployeeBloc>().add(LoadEmployees());
+            context.read<EmployeeBloc>().add(
+              const LoadEmployees(isSilent: true),
+            );
           }
         },
         buildWhen: (previous, current) =>
@@ -61,13 +63,20 @@ class _EmployeeListPageState extends State<EmployeeListPage> {
             if (state.employees.isEmpty) {
               return const Center(child: Text("No employees found."));
             }
-            return ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: state.employees.length,
-              itemBuilder: (context, index) {
-                final employee = state.employees[index];
-                return _EmployeeCard(employee: employee);
+            return RefreshIndicator(
+              onRefresh: () async {
+                context.read<EmployeeBloc>().add(
+                  const LoadEmployees(isSilent: true),
+                );
               },
+              child: ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: state.employees.length,
+                itemBuilder: (context, index) {
+                  final employee = state.employees[index];
+                  return _EmployeeCard(employee: employee);
+                },
+              ),
             );
           }
           return const SizedBox();

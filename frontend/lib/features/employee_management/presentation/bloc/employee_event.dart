@@ -7,9 +7,21 @@ abstract class EmployeeEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadEmployees extends EmployeeEvent {}
+class LoadEmployees extends EmployeeEvent {
+  final bool isSilent;
+  const LoadEmployees({this.isSilent = false});
 
-class LoadDepartments extends EmployeeEvent {}
+  @override
+  List<Object> get props => [isSilent];
+}
+
+class LoadDepartments extends EmployeeEvent {
+  final bool isSilent;
+  const LoadDepartments({this.isSilent = false});
+
+  @override
+  List<Object> get props => [isSilent];
+}
 
 class AddEmployee extends EmployeeEvent {
   final Map<String, dynamic> employeeData;

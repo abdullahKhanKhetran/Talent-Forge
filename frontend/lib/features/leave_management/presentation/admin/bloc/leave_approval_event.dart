@@ -7,7 +7,13 @@ abstract class LeaveApprovalEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class LoadPendingLeaves extends LeaveApprovalEvent {}
+class LoadPendingLeaves extends LeaveApprovalEvent {
+  final bool isSilent;
+  const LoadPendingLeaves({this.isSilent = false});
+
+  @override
+  List<Object> get props => [isSilent];
+}
 
 class ApproveLeave extends LeaveApprovalEvent {
   final int requestId;

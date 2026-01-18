@@ -72,90 +72,95 @@ class _LoginPageState extends State<LoginPage> {
                 ], // Light premium gradient
               ),
             ),
-            child: SafeArea(
-              child: Center(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(24),
-                  child: Card(
-                    elevation: 8,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    color: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.all(32.0),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              Icons.business_center_rounded,
-                              size: 64,
-                              color: AppColors.primary,
-                            ),
-                            const SizedBox(height: 24),
-                            Text(
-                              SharedStrings.appName,
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.headlineMedium
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.primary,
-                                  ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Workforce Intelligence',
-                              textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.titleSmall
-                                  ?.copyWith(
-                                    color: Colors.grey.shade600,
-                                    letterSpacing: 1.2,
-                                  ),
-                            ),
-                            const SizedBox(height: 48),
-                            CustomTextField(
-                              controller: _emailController,
-                              labelText: SharedStrings.email,
-                              hintText: 'name@company.com',
-                              prefixIcon: Icons.email_outlined,
-                              keyboardType: TextInputType.emailAddress,
-                              textInputAction: TextInputAction.next,
-                              validator: Validators.email,
-                            ),
-                            const SizedBox(height: 16),
-                            CustomTextField(
-                              controller: _passwordController,
-                              labelText: SharedStrings.password,
-                              hintText: '••••••••',
-                              prefixIcon: Icons.lock_outline,
-                              obscureText: _obscurePassword,
-                              textInputAction: TextInputAction.done,
-                              validator: Validators.password,
-                              onFieldSubmitted: (_) => _onLogin(),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  _obscurePassword
-                                      ? Icons.visibility_off
-                                      : Icons.visibility,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    _obscurePassword = !_obscurePassword;
-                                  });
-                                },
+            child: GestureDetector(
+              onTap: () => FocusScope.of(context).unfocus(),
+              child: SafeArea(
+                child: Center(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(24),
+                    child: Card(
+                      elevation: 8,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      color: Colors.white,
+                      child: Padding(
+                        padding: const EdgeInsets.all(32.0),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.business_center_rounded,
+                                size: 64,
+                                color: AppColors.primary,
                               ),
-                            ),
-                            const SizedBox(height: 32),
-                            CustomButton(
-                              text: SharedStrings.login,
-                              isLoading: state is AuthLoading,
-                              onPressed: _onLogin,
-                            ),
-                          ],
+                              const SizedBox(height: 24),
+                              Text(
+                                SharedStrings.appName,
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headlineMedium
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.primary,
+                                    ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Workforce Intelligence',
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.titleSmall
+                                    ?.copyWith(
+                                      color: Colors.grey.shade600,
+                                      letterSpacing: 1.2,
+                                    ),
+                              ),
+                              const SizedBox(height: 48),
+                              CustomTextField(
+                                controller: _emailController,
+                                labelText: SharedStrings.email,
+                                hintText: 'name@company.com',
+                                prefixIcon: Icons.email_outlined,
+                                keyboardType: TextInputType.emailAddress,
+                                textInputAction: TextInputAction.next,
+                                validator: Validators.email,
+                              ),
+                              const SizedBox(height: 16),
+                              CustomTextField(
+                                controller: _passwordController,
+                                labelText: SharedStrings.password,
+                                hintText: '••••••••',
+                                prefixIcon: Icons.lock_outline,
+                                obscureText: _obscurePassword,
+                                textInputAction: TextInputAction.done,
+                                validator: Validators.password,
+                                onFieldSubmitted: (_) => _onLogin(),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _obscurePassword
+                                        ? Icons.visibility_off
+                                        : Icons.visibility,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _obscurePassword = !_obscurePassword;
+                                    });
+                                  },
+                                ),
+                              ),
+                              const SizedBox(height: 32),
+                              CustomButton(
+                                text: SharedStrings.login,
+                                isLoading: state is AuthLoading,
+                                onPressed: _onLogin,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),

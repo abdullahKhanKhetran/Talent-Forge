@@ -21,7 +21,9 @@ class LeaveApprovalBloc extends Bloc<LeaveApprovalEvent, LeaveApprovalState> {
     LoadPendingLeaves event,
     Emitter<LeaveApprovalState> emit,
   ) async {
-    emit(LeaveApprovalLoading());
+    if (!event.isSilent) {
+      emit(LeaveApprovalLoading());
+    }
     final result = await repository.getPendingLeaves();
     result.fold(
       (failure) => emit(LeaveApprovalFailure(message: failure.message)),
@@ -33,11 +35,22 @@ class LeaveApprovalBloc extends Bloc<LeaveApprovalEvent, LeaveApprovalState> {
     ApproveLeave event,
     Emitter<LeaveApprovalState> emit,
   ) async {
-    emit(LeaveApprovalLoading());
+    // Optimistic Update
+    final currentState = state;
+    if (currentState is LeaveApprovalLoaded) {
+      final updatedLeaves = currentState.pendingLeaves
+          .where((l) => l.id != event.requestId)
+          .toList();
+      emit(LeaveApprovalLoaded(pendingLeaves: updatedLeaves));
+    }
+
     final result = await repository.approveLeave(event.requestId);
     result.fold(
-      (failure) => emit(LeaveApprovalFailure(message: failure.message)),
-      (_) => add(LoadPendingLeaves()), // Reload
+      (failure) {
+        emit(LeaveApprovalFailure(message: failure.message));
+        add(const LoadPendingLeaves()); // Rollback/Refresh on failure
+      },
+      (_) => add(const LoadPendingLeaves(isSilent: true)), // Background refresh
     );
   }
 
@@ -45,11 +58,22 @@ class LeaveApprovalBloc extends Bloc<LeaveApprovalEvent, LeaveApprovalState> {
     RejectLeave event,
     Emitter<LeaveApprovalState> emit,
   ) async {
-    emit(LeaveApprovalLoading());
+    // Optimistic Update
+    final currentState = state;
+    if (currentState is LeaveApprovalLoaded) {
+      final updatedLeaves = currentState.pendingLeaves
+          .where((l) => l.id != event.requestId)
+          .toList();
+      emit(LeaveApprovalLoaded(pendingLeaves: updatedLeaves));
+    }
+
     final result = await repository.rejectLeave(event.requestId, event.reason);
     result.fold(
-      (failure) => emit(LeaveApprovalFailure(message: failure.message)),
-      (_) => add(LoadPendingLeaves()), // Reload
+      (failure) {
+        emit(LeaveApprovalFailure(message: failure.message));
+        add(const LoadPendingLeaves()); // Rollback/Refresh on failure
+      },
+      (_) => add(const LoadPendingLeaves(isSilent: true)), // Background refresh
     );
   }
 }
