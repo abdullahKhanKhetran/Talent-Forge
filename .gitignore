@@ -1,2 +1,19 @@
 # Visual Studio
 .vs/
+# Flutter generated platform files
+frontend/linux/flutter/generated_*
+frontend/macos/Flutter/Generated*
+frontend/windows/flutter/generated_*
+
+# .NET build artifacts
+**/obj/
+**/bin/
+**/Debug/
+**/Release/
+
+# Other common junk
+**/__pycache__/
+**/*.g.dart
+**/*.freezed.dart
+pubspec.lock   # optional, but helps reduce noise
+*.log
